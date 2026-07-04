@@ -50,6 +50,7 @@ const getItems = async (req, res) => {
   }
 };
 
+// Single delete
 const deleteItem = async (req, res) => {
   try {
     const { id } = req.params;
@@ -65,6 +66,7 @@ const deleteItem = async (req, res) => {
   }
 };
 
+// Batch delete
 const deleteItems = async (req, res) => {
   try {
     const { ids } = req.body;
@@ -81,8 +83,67 @@ const deleteItems = async (req, res) => {
   }
 };
 
+// Edit Item
+const getItem = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+
+    if(!item) {
+      return status(404).json({error: err.message});
+    }
+    res.json(item);
+  } catch(err) {
+    res.status(500).json({error: err.message});
+  }
+};
+
+// Get categories from current active database categories
+const getCategories = async (req, res) => {
+  try {
+    const categories = await Item.distinct('category');
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({error: err.message})
+  }
+};
+
+// Update an item by ID
+const updateItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updated = await Item.findByIdAndUpdate(id, req.body, {
+      returnDocument: 'after',          
+      runValidators: true  
+    });
+
+    if (!updated) {
+      return res.status(404).json({ error: 'Item not found' });
+    }
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Create an item and add to database
+const createItem = async (req, res) => {
+  try {
+    const newItem = new Item(req.body);
+    const saved = await newItem.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 module.exports = {
     getItems,
+    getItem,
     deleteItem,
-    deleteItems
+    deleteItems,
+    getCategories, 
+    updateItem,
+    createItem
 };
