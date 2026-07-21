@@ -23,7 +23,7 @@ const getItems = async (req, res) => {
     }
 
     let dbQuery = Item.find(query);
-
+    console.log("QUERY:", req.query);
     // SORTING
     if (sort) {
       const sortOption = {};
@@ -39,6 +39,11 @@ const getItems = async (req, res) => {
       dbQuery,
       Item.countDocuments(query)
     ]);
+    console.log(
+    items.map(item => ({
+        name: item.name,
+        createdAt: item.createdAt
+    })));
 
     res.json({
       items,

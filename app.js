@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 
@@ -6,7 +8,7 @@ require('./app_server/models/db');
 
 const app = express();
 
-// Enable CORS
+
 // Enable CORS
 app.use('/api', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -15,12 +17,16 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
+// Enable JSON
 app.use(express.json());
+
 
 // Routes
 const itemRoutes = require('./app_server/routes/items');
+const userRoutes = require('./app_server/routes/users');
 
 app.use('/api/items', itemRoutes);
+app.use('/api/users', userRoutes);
 
 
 module.exports = app;

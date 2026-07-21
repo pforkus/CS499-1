@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const host = process.env.DB_HOST || '127.0.0.1';
-const dbURI = `mongodb://${host}/DigitalWarehouse`;
+const dbURI = process.env.MONGO_URI;
 
 const readLine = require('readline');
 
@@ -64,7 +63,8 @@ process.on('SIGTERM', () => {
 // Make initial connection to DB
 connect();
 
-// Import Mongoose schema
+// Import Mongoose schemas
 require('./item');
+require('./users');
 
 module.exports = mongoose;
