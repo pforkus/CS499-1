@@ -8,6 +8,7 @@ const itemSchema = new mongoose.Schema({
     description: String,
     price: Number,
     imageUrl: String,
+    imagePublicId: String,
 
     category: { type: String, lowercase: true, index: true }
 }, { timestamps: true });
