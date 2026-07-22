@@ -81,7 +81,13 @@ const deleteItems = async (req, res) => {
       return res.status(400).json({ error: 'ids must be a non-empty array' });
     }
 
-    // FIXME implement batch delete image id retrieval and deletion
+    const items = await Item.find({ _id: {$in: ids}});
+
+    for (const item of items) {
+      if(item.imagePublicId){
+        await cloudinary.uploader.destroy(item.imagePublicId);
+      }
+    }
 
     const result = await Item.deleteMany({ _id: { $in: ids } });
 
