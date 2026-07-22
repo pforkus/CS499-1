@@ -39,11 +39,6 @@ const getItems = async (req, res) => {
       dbQuery,
       Item.countDocuments(query)
     ]);
-    console.log(
-    items.map(item => ({
-        name: item.name,
-        createdAt: item.createdAt
-    })));
 
     res.json({
       items,

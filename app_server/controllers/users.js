@@ -32,7 +32,7 @@ const createUser = async (req, res) => {
 
     }
 };
-
+// login
 const login = async (req, res) => {
     try{
         const { username, password } = req.body;
