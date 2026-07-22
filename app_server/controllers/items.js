@@ -1,5 +1,5 @@
 const Item = require('../models/item');
-
+const cloudinary = require('../config/cloudinary');
 
 const getItems = async (req, res) => {
     
@@ -54,11 +54,17 @@ const getItems = async (req, res) => {
 const deleteItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await Item.findByIdAndDelete(id);
+    const deleted = await Item.findById(id);
 
-    if (!deleted) {
+    if (!item) {
       return res.status(404).json({ error: 'Item not found' });
     }
+
+    if(item.imagePublicId) {
+      await cloudinary.uploader.destroy(item.imagePublicId);
+    }
+
+    await Item.findByIdAndDelete(id);
 
     res.json({ deleted: true, id });
   } catch (err) {
@@ -74,6 +80,8 @@ const deleteItems = async (req, res) => {
     if (!Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ error: 'ids must be a non-empty array' });
     }
+
+    // FIXME implement batch delete image id retrieval and deletion
 
     const result = await Item.deleteMany({ _id: { $in: ids } });
 
