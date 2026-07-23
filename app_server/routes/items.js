@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/items');
 
-// GET all Items
+// GET all Items, POSTS new items
 router
     .route('/')
     .get(controller.getItems)
@@ -12,6 +12,10 @@ router
 router
     .route('/categories')
     .get(controller.getCategories);
+
+router
+    .route('/names')
+    .get(controller.getAllNames);
 
 // GET & DELETE
 router

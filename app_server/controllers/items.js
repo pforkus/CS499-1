@@ -50,6 +50,17 @@ const getItems = async (req, res) => {
   }
 };
 
+// Get all names
+const getAllNames = async (req, res) => {
+  try {
+    const items = await Item.find({}, 'name');
+    const names = items.map(item => item.name);
+    res.json(names);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // Single delete
 const deleteItem = async (req, res) => {
   try {
@@ -103,7 +114,7 @@ const getItem = async (req, res) => {
     const item = await Item.findById(req.params.id);
 
     if(!item) {
-      return status(404).json({error: err.message});
+      return res.status(404).json({error: "Item not found"});
     }
     res.json(item);
   } catch(err) {
@@ -159,5 +170,6 @@ module.exports = {
     deleteItems,
     getCategories, 
     updateItem,
-    createItem
+    createItem,
+    getAllNames
 };
