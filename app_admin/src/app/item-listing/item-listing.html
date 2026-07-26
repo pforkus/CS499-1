@@ -1,0 +1,113 @@
+<div class="container mt-3">
+
+  <!-- CONTROL PANEL -->
+  <div class="card mb-3">
+    <div class="card-body row g-2 align-items-end">
+
+      <div class="col-md-4">
+        <label class="form-label">Search</label>
+        <input class="form-control"
+               [(ngModel)]="search"
+               placeholder="Search items">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Category</label>
+        <select class="form-select" [(ngModel)]="category">
+          <option value="">All</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100" (click)="loadItems()">
+          Submit
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="d-flex justify-content-between mb-2">
+
+    <div>
+       <button class="btn btn-success me-2" routerLink="/items/add">
+      Add Item
+      </button>
+
+      <button class="btn btn-danger me-2"
+              (click)="deleteSelected()"
+              [disabled]="selectedItems.length === 0">
+        Delete Selected
+      </button>
+
+      <button class="btn btn-warning"
+              (click)="editSelected()"
+              [disabled]="selectedItems.length !== 1">
+        Edit Item
+      </button>
+    </div>
+
+    <small class="text-muted">
+      Selected: {{ selectedItems.length }}
+    </small>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+
+      <thead class="table-dark">
+  <tr>
+    <th>
+      <input type="checkbox"
+             (change)="toggleAll($event)"
+             [checked]="isAllSelected()">
+    </th>
+    <th (click)="setSort('sku')" style="cursor: pointer;">
+      Sku
+      <span *ngIf="sort === 'sku'">{{ order === 'asc' ? '▲' : '▼' }}</span>
+    </th>
+    <th (click)="setSort('name')" style="cursor: pointer;">
+      Name
+      <span *ngIf="sort === 'name'">{{ order === 'asc' ? '▲' : '▼' }}</span>
+    </th>
+    <th (click)="setSort('category')" style="cursor: pointer;">
+      Category
+      <span *ngIf="sort === 'category'">{{ order === 'asc' ? '▲' : '▼' }}</span>
+    </th>
+    <th (click)="setSort('price')" style="cursor: pointer;">
+      Price
+      <span *ngIf="sort === 'price'">{{ order === 'asc' ? '▲' : '▼' }}</span>
+    </th>
+    <th (click)="setSort('quantity')" style="cursor: pointer;">
+      Qty
+      <span *ngIf="sort === 'quantity'">{{ order === 'asc' ? '▲' : '▼' }}</span>
+    </th>
+  </tr>
+</thead>
+
+      <tbody>
+        <tr *ngFor="let item of items">
+
+          <td>
+            <input type="checkbox"
+                   [checked]="isSelected(item)"
+                   (change)="toggleSelection(item)">
+          </td>
+
+          <td>{{ item.sku }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.category }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.quantity }}</td>
+
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>

@@ -1,0 +1,49 @@
+<div class="container mt-3">
+
+  <h3>Edit Item</h3>
+
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+<div class="mb-3">
+  <label class="form-label">Sku</label>
+  <input class="form-control" formControlName="sku">
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Name</label>
+  <input class="form-control" formControlName="name">
+  <div class="text-danger" *ngIf="submitted && f['name'].errors">
+    Name is required.
+  </div>
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Category</label>
+  <input class="form-control" formControlName="category">
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Price</label>
+  <input class="form-control" type="number" formControlName="price">
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Quantity</label>
+  <input class="form-control" type="number" formControlName="quantity">
+  <div class="text-danger" *ngIf="submitted && f['quantity'].errors">
+    Quantity is required.
+  </div>
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Description</label>
+  <textarea class="form-control" formControlName="description" rows="3"></textarea>
+</div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+
+    <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+
+  </form>
+
+</div>
