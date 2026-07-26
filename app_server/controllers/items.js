@@ -1,6 +1,7 @@
 const Item = require('../models/item');
 const cloudinary = require('../config/cloudinary');
 
+// GET: /items - Gets all items
 const getItems = async (req, res) => {
     
   try {
@@ -23,7 +24,7 @@ const getItems = async (req, res) => {
     }
 
     let dbQuery = Item.find(query);
-    console.log("QUERY:", req.query);
+
     // SORTING
     if (sort) {
       const sortOption = {};
@@ -50,7 +51,7 @@ const getItems = async (req, res) => {
   }
 };
 
-// Get all names
+// GET: api/items/names - Gets all item names
 const getAllNames = async (req, res) => {
   try {
     const items = await Item.find({}, 'name');
@@ -61,7 +62,7 @@ const getAllNames = async (req, res) => {
   }
 };
 
-// Single delete
+// DELETE: api/items/{id} - Single delete
 const deleteItem = async (req, res) => {
   try {
     const { id } = req.params;
@@ -71,6 +72,7 @@ const deleteItem = async (req, res) => {
       return res.status(404).json({ error: 'Item not found' });
     }
 
+    // Delete image from Cloudinary, if it exists
     if(item.imagePublicId) {
       await cloudinary.uploader.destroy(item.imagePublicId);
     }
@@ -83,7 +85,7 @@ const deleteItem = async (req, res) => {
   }
 };
 
-// Batch delete
+// POST: api/items/delete-many - Batch delete
 const deleteItems = async (req, res) => {
   try {
     const { ids } = req.body;
@@ -94,7 +96,8 @@ const deleteItems = async (req, res) => {
 
     const items = await Item.find({ _id: {$in: ids}});
 
-    for (const item of items) {
+    // Delete images from Cloudinary, if they exist
+    for (const item of items) { 
       if(item.imagePublicId){
         await cloudinary.uploader.destroy(item.imagePublicId);
       }
@@ -108,7 +111,7 @@ const deleteItems = async (req, res) => {
   }
 };
 
-// Edit Item
+// GET: api/items/{id} - Gets specific item by id
 const getItem = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -122,7 +125,7 @@ const getItem = async (req, res) => {
   }
 };
 
-// Get categories from current active database categories
+// GET: api/items/categories - Gets all categories listed in entries
 const getCategories = async (req, res) => {
   try {
     const categories = await Item.distinct('category');
@@ -132,7 +135,7 @@ const getCategories = async (req, res) => {
   }
 };
 
-// Update an item by ID
+// PUT: api/items/{id} - Update an item by ID
 const updateItem = async (req, res) => {
   try {
     const { id } = req.params;
@@ -152,7 +155,7 @@ const updateItem = async (req, res) => {
   }
 };
 
-// Create an item and add to database
+// POST: api/items - Create an item and add to database
 const createItem = async (req, res) => {
   try {
     const newItem = new Item(req.body);

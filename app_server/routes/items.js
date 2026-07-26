@@ -2,32 +2,32 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/items');
 
-// GET all Items, POSTS new items
+// Defines route to GET all items, and POST new items
 router
     .route('/')
     .get(controller.getItems)
     .post(controller.createItem);
 
-// Get categories
+// Defines route to retrieve categories
 router
     .route('/categories')
     .get(controller.getCategories);
 
+// Define route to retrieve names
 router
     .route('/names')
     .get(controller.getAllNames);
 
-// GET & DELETE
+// Define route for item endpoint
 router
     .route('/:id')
-    .get(controller.getItem)
+    .get(controller.getItem) 
     .delete(controller.deleteItem)
     .put(controller.updateItem);
 
-// DELETE MANY
+// Defines route for delete many endpoint
 router
     .route('/delete-many')
     .post(controller.deleteItems);
-
 
 module.exports = router;
