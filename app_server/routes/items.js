@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/items');
+var requireAuth = require('../middleware/auth');
 
-// Defines route to GET all items, and POST new items
+// Require a valid token for all routes defined here
+router.use(requireAuth);
+
+// Defines route to GET items, and POST new items
 router
     .route('/')
     .get(controller.getItems)

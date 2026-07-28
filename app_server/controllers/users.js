@@ -1,5 +1,6 @@
 const Users = require('../models/users');
 const bcrypt = require('bcrypt');
+const { signToken } = require('../utils/jwt');
 const SALT_ROUNDS = 10;
 
 const createUser = async (req, res) => {
@@ -23,10 +24,12 @@ const createUser = async (req, res) => {
         // Create user
         const newUser = await Users.create({ username, password: hashedPassword});
 
+        // Signs a JWT to authenticate user
+        const token = signToken(newUser);
+
         // Remove password from response
         const { password: _, ...userResponse } = newUser.toObject();
-        res.status(201).json(userResponse);
-
+        res.status(201).json({ ...userResponse, token} );
     } catch (err) {
         res.status(500).json({ error: err.message });
 
@@ -54,9 +57,12 @@ const login = async (req, res) => {
             return res.status(401).json({error: "Invalid username or password"});
         }
 
+        // Sign a JWT for user
+        const token = signToken(user);
+
         // Remove password from response
         const { password: _, ...userResponse } = user.toObject();
-        res.status(200).json(userResponse);
+        res.status(200).json({ ...userResponse, token });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

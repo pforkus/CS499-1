@@ -8,14 +8,13 @@ require('./app_server/models/db');
 
 const app = express();
 
-
+const allowedOrigins = (process.env.CLIENT_ORIGIN || '').split(',');
 // Enable CORS
-app.use('/api', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE' );
-  next();
-});
+app.use('/api', cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+}));
 
 // Enable JSON
 app.use(express.json());

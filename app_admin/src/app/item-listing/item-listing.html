@@ -1,4 +1,13 @@
 <div class="container mt-3">
+ <!-- LOGIN BUTTON -->
+  <div class="login-bar">
+    <button class="btn btn-primary" routerLink="/login" *ngIf="!auth.isLoggedIn()">
+      Login
+    </button>
+    <button class="btn btn-secondary" (click)="onLogout()" *ngIf="auth.isLoggedIn()">
+      Logout
+    </button>
+  </div>
 
   <!-- CONTROL PANEL -->
   <div class="card mb-3">
@@ -15,12 +24,14 @@
         <label class="form-label">Category</label>
         <select class="form-select" [(ngModel)]="category">
           <option value="">All</option>
-          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          <option *ngFor="let cat of categories()" [value]="cat">{{ cat }}</option>
         </select>
       </div>
 
       <div class="col-md-2">
-        <button class="btn btn-primary w-100" (click)="loadItems()">
+        <button class="btn btn-primary w-100" 
+        (click)="loadItems()"
+        [disabled]="!auth.isLoggedIn()">
           Submit
         </button>
       </div>
@@ -32,19 +43,21 @@
   <div class="d-flex justify-content-between mb-2">
 
     <div>
-       <button class="btn btn-success me-2" routerLink="/items/add">
+       <button class="btn btn-success me-2" 
+       routerLink="/items/add"
+       [disabled]="!auth.isLoggedIn()">
       Add Item
       </button>
 
       <button class="btn btn-danger me-2"
               (click)="deleteSelected()"
-              [disabled]="selectedItems.length === 0">
+              [disabled]="selectedItems.length === 0 || !auth.isLoggedIn()">
         Delete Selected
       </button>
 
       <button class="btn btn-warning"
               (click)="editSelected()"
-              [disabled]="selectedItems.length !== 1">
+              [disabled]="selectedItems.length !== 1 || !auth.isLoggedIn()">
         Edit Item
       </button>
     </div>
@@ -90,7 +103,7 @@
 </thead>
 
       <tbody>
-        <tr *ngFor="let item of items">
+        <tr *ngFor="let item of items()">
 
           <td>
             <input type="checkbox"
