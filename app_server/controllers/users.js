@@ -66,12 +66,17 @@ const login = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+};
 
+// Health check
+const health = (req, res) => {
+    res.sendStatus(200);
 };
 
 
 
 module.exports = {
     createUser,
-    login
+    login,
+    health
 };

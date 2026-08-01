@@ -10,5 +10,9 @@ router
     .route('/login')
     .post(controller.login);
 
+router
+    .route('/health')
+    .get(controller.health);
+
 module.exports = router;
     
