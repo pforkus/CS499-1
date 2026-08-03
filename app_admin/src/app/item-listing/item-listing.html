@@ -122,5 +122,24 @@
 
     </table>
   </div>
+  <nav class="pagination" *ngIf="totalPages() > 1">
+  <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1">
+    Previous
+  </button>
+
+  <button *ngFor="let p of pageNumbers"
+          (click)="goToPage(p)"
+          [class.active]="p === currentPage()">
+    {{ p }}
+  </button>
+
+  <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()">
+    Next
+  </button>
+</nav>
+
+<p class="pagination-summary" *ngIf="totalItems() > 0">
+  Showing page {{ currentPage() }} of {{ totalPages() }} ({{ totalItems() }} items)
+</p>
 
 </div>

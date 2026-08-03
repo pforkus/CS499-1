@@ -23,6 +23,12 @@ export class ItemListing implements OnInit {
   sort = 'name';
   order = 'asc';
 
+  // pagination state
+  currentPage = signal(1);
+  totalPages = signal(1);
+  totalItems = signal(0);
+  pageSize = 20;
+
   // selection
   selectedItems: any[] = [];
 
@@ -49,23 +55,39 @@ export class ItemListing implements OnInit {
   private resetState() {
     this.items.set([]);
     this.categories.set([]);
+    this.currentPage.set(1);
+    this.totalPages.set(1);
   }
 
-  loadItems() {
+  loadItems(page: number = 1) {
 
+    // Ensures user is authenticated before loading inventory data
     if(!this.auth.isLoggedIn()) return;
 
     const params = {
       search: this.search,
       category: this.category,
       sort: this.sort,
-      order: this.order
+      order: this.order,
+      page,
+      limit: this.pageSize
     };
     
     this.itemsService.getItems(params).subscribe(res => {
       this.items.set(res.items);
-      console.log('API RESPONSE:', res);
+      this.currentPage.set(res.pagination.page);
+      this.totalPages.set(res.pagination.pages);
+      this.totalItems.set(res.pagination.total);
     });
+  }
+
+  goToPage(page : number) {
+    if(page < 1 || page > this.totalPages()) return;
+    this.loadItems(page);
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
   }
 
   loadCategories() {
@@ -123,7 +145,7 @@ export class ItemListing implements OnInit {
     this.itemsService.deleteItems(ids).subscribe({
       next: () => {
         this.selectedItems = [];
-        this.loadItems();
+        this.loadItems(this.currentPage());
       },
       error: (err) => {
         console.error('Failed to delete items', err);
@@ -131,13 +153,13 @@ export class ItemListing implements OnInit {
     });
   }
 
-  editSelected() { // FIXME remove, unfeasible
+  editSelected() { 
     const item = this.selectedItems[0];
     this.router.navigate(['/items', item._id, 'edit']);
   }
 
   onFiltersChange() {
-    this.loadItems();
+    this.loadItems(1); // Filter changes reset page to 1
   }
 
   setSort(field: string) {
@@ -150,6 +172,6 @@ export class ItemListing implements OnInit {
       this.sort = field;
       this.order = 'asc';
     }
-    this.loadItems();
+    this.loadItems(1); // Sort changes reset to page 1
   }
 }
