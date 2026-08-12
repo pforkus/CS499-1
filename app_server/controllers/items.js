@@ -128,7 +128,9 @@ const getItem = async (req, res) => {
 // GET: api/items/categories - Gets all categories listed in entries
 const getCategories = async (req, res) => {
   try {
-    const categories = await Item.distinct('category');
+    const categories = await Item.distinct('category', {
+      category: { $nin: [null, ""]}
+    });
     res.json(categories);
   } catch (err) {
     res.status(500).json({error: err.message})
